@@ -1,0 +1,21 @@
+--Table status
+
+aws dynamodb --endpoint-url=http://localhost:4566  describe-table --table-name HeroProfile | grep TableStatus
+
+aws dynamodb --endpoint-url=http://localhost:4566  describe-table --table-name CoffeType | grep TableStatus
+
+
+--Delete table
+
+aws dynamodb --endpoint-url=http://localhost:4566  delete-table --table-name HeroProfile
+
+--Put Item
+
+aws dynamodb --endpoint-url=http://localhost:4566 put-item \
+    --table-name HeroProfile  \
+    --item \
+        '{"Planet": {"S": "Kree"}, "Nickname": {"S": "Capt Marvel"}, "Power": {"S": "Joia do Espaco"}}'
+		
+aws dynamodb --endpoint-url=http://localhost:4566 put-item --table-name CoffeType --item "{\"Type\":{\"S\":\"1\"},\"Desc\":{\"S\":\"Express\"},\"Coffe\":{\"BOOL\":true},\"Milk\":{\"BOOL\":false},\"Water\":{\"BOOL\":true},\"Chocolate\":{\"BOOL\":false}}"
+
+
