@@ -8,6 +8,7 @@ using CoffeMachine.Service.port;
 using CoffeMachine.Service;
 using CoffeMachine.Model.Converter;
 using CoffeMachine.Model.Response;
+using CoffeMachine.Model.Request;
 using System;
 using System.Linq;
 
@@ -37,47 +38,75 @@ namespace CoffeMachine.Controllers
         }
 
         [HttpGet("{type}/{desc}")]
-        public async Task<CoffeTypeResponse> GetCoffeType(string type, string desc)
+        public async Task<ApiResponse<CoffeTypeResponse>> GetCoffeType(string type, string desc)
         {
-            var result = await this._coffeService.GetCoffeType(type, desc);
-            return new CoffeTypeResponse(200, new JsonResult(result));
+            try
+            {
+                var result = await this._coffeService.GetCoffeType(type, desc);
+
+                return new ApiResponse<CoffeTypeResponse>(200, new CoffeTypeResponse(
+                    result.Type, result.Desc, result.Coffe, result.Milk, result.Water, result.Chocolate
+                ));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error occurred: {0}", e.Message);
+
+                return new ApiResponse<CoffeTypeResponse>(404);
+            }
+
         }
         
         // PUT 
-        [HttpPut("{type}")]
-        public async Task<CoffeTypeResponse> PutCoffeTypeAsync(int type, [FromBody] CoffeTypeRequest coffe)
+        [HttpPut("{type}/{desc}")]
+        public async Task<ApiResponse<CoffeTypeResponse>> PutCoffeTypeAsync(string type, string desc, [FromBody] CoffeTypeRequest coffe)
         {
-            await this._coffeService.PutCoffeType(type, CoffeTypeConverter.RequesttoDTO(coffe));
-            return new CoffeTypeResponse(200);
+            try
+            {
+
+                await this._coffeService.PutCoffeType(type, desc, CoffeTypeConverter.RequesttoDTO(coffe));
+                return new ApiResponse<CoffeTypeResponse>(200);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error occurred: {0}", e);
+
+                return new ApiResponse<CoffeTypeResponse>(404);
+            }
+            
         }
 
         // POST 
         [HttpPost]
-        public async Task<CoffeTypeResponse> AddCoffeType([FromBody] CoffeTypeRequest type) 
+        public async Task<ApiResponse<CoffeTypeResponse>> AddCoffeType([FromBody] CoffeTypeRequest type) 
         {
             try
             {
                 await this._coffeService.AddCoffeType(CoffeTypeConverter.RequesttoDTO(type));
-                return new CoffeTypeResponse(200);
+                return new ApiResponse<CoffeTypeResponse>(200);
             }
             catch (Exception e)
             {
-                return new CoffeTypeResponse(404);
+                Console.WriteLine("Error occurred: {0}", e.Message);
+
+                return new ApiResponse<CoffeTypeResponse>(404);
             }
         }
 
         // DELETE 
-        [HttpDelete("{type}")]
-        public async Task<CoffeTypeResponse> DeleteCoffeTypeAsync(int type)
-        {
+        [HttpDelete("{type}/{desc}")]
+        public async Task<ApiResponse<CoffeTypeResponse>> DeleteCoffeTypeAsync(string type, string desc)
+        {            
             try
             {
-                await this._coffeService.DeleteCoffeType(type);
-                return new CoffeTypeResponse(200);
+                await this._coffeService.DeleteCoffeType(type, desc);
+                return new ApiResponse<CoffeTypeResponse>(200);
             }
             catch (Exception e)
             {
-                return new CoffeTypeResponse(404);
+                Console.WriteLine("Error occurred: {0}", e);
+
+                return new ApiResponse<CoffeTypeResponse>(404);
             }
         }
 

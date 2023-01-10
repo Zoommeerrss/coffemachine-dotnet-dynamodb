@@ -15,8 +15,8 @@ namespace CoffeMachine.Service.port
 
         public Task AddCoffeType(CoffeTypeDTO type);
 
-        public Task<CoffeTypeDTO> PutCoffeType(int type, CoffeTypeDTO coffe);
+        public Task<CoffeTypeDTO> PutCoffeType(string type, string desc, CoffeTypeDTO coffe);
 
-        public Task DeleteCoffeType(int type);
+        public Task DeleteCoffeType(string type, string desc);
     }
 }

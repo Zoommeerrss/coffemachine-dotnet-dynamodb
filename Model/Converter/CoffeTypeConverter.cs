@@ -22,6 +22,18 @@ namespace CoffeMachine.Model.Converter
             return c;
         }
 
+        public static CoffeTypeResponse DTOtoResponse(CoffeTypeDTO dto)
+        {
+            CoffeTypeResponse c = new CoffeTypeResponse();
+            c.Type = dto.Type;
+            c.Desc = dto.Desc;
+            c.Coffe = dto.Coffe;
+            c.Milk = dto.Milk;
+            c.Water = dto.Water;
+            c.Chocolate = dto.Chocolate;
+            return c;
+        }
+
         public static CoffeTypeDTO EntitytoDTO(CoffeType entity)
         {
             CoffeTypeDTO c = new CoffeTypeDTO();

@@ -1,4 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using CoffeMachine.Model.Converter;
 using CoffeMachine.Model.DTO;
 using CoffeMachine.Model.Entity;
@@ -34,42 +36,25 @@ namespace CoffeMachine.Service
             await this.dynamoBDContext.SaveAsync<CoffeType>(CoffeTypeConverter.DTOtoEntity(type));            
         }
 
-        async Task ICoffeService.DeleteCoffeType(int type)
+        async Task ICoffeService.DeleteCoffeType(string type, string desc)
         {
-            await this.dynamoBDContext.DeleteAsync(type);
+            await this.dynamoBDContext.DeleteAsync<CoffeType>(type, desc, null);
         }
 
         async Task<CoffeTypeDTO> ICoffeService.GetCoffeType(string type, string desc)
         {
             var entity = await this.dynamoBDContext.LoadAsync<CoffeType>(type, desc);
 
-            _logger.LogInformation("CoffeTypeDTO: ", entity);
-
-            CoffeTypeDTO c = new CoffeTypeDTO();
-            c.Type = entity.Type;
-            c.Desc = entity.Desc;
-            c.Coffe = entity.Coffe;
-            c.Milk = entity.Milk;
-            c.Water = entity.Water;
-            c.Chocolate = entity.Chocolate;
-            return c;
+            return CoffeTypeConverter.EntitytoDTO(entity);
         }
 
-        async Task<CoffeTypeDTO> ICoffeService.PutCoffeType(int type, CoffeTypeDTO coffe)
+        async Task<CoffeTypeDTO> ICoffeService.PutCoffeType(string type, string desc, CoffeTypeDTO coffe)
         {
-            /*CoffeType find = await this.dynamoBDContext.QueryAsync<CoffeType>(type).GetRemainingAsync();
+            var entity = await this.dynamoBDContext.LoadAsync<CoffeType>(type, desc);
+                        
+            await this.dynamoBDContext.SaveAsync<CoffeType>(CoffeTypeConverter.DTOtoEntity(coffe));
 
-            find.Type = coffe.Type;
-            find.Desc = coffe.Desc;
-            find.Coffe = coffe.Coffe;
-            find.Milk = coffe.Milk;
-            find.Water = coffe.Water;            
-            find.Chocolate = coffe.Chocolate;
-
-            await this.dynamoBDContext.SaveAsync<CoffeType>(find);*/
-
-            //return CoffeTypeConverter.EntitytoDTO(find);
-            return null;
+            return CoffeTypeConverter.EntitytoDTO(entity);
         }
     }
 }

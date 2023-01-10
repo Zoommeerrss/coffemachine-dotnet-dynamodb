@@ -7,26 +7,31 @@ namespace CoffeMachine.Model.Response
     {
         public CoffeTypeResponse() { }
 
-        public CoffeTypeResponse(int httpStatusCode)
+        public CoffeTypeResponse(string type, string desc, bool coffe, bool milk, bool water, bool chocolate)
         {
-            this.HttpStatusCode = httpStatusCode;
-        }
-
-        public CoffeTypeResponse(int httpStatusCode, object response)
-        {
-            this.HttpStatusCode = httpStatusCode;
-            this.Response = response;
+            Type = type;
+            Desc = desc;
+            Coffe = coffe;
+            Milk = milk;
+            Water = water;
+            Chocolate = chocolate;
         }
 
         // partition key or hask key
-        public int HttpStatusCode { get; set; }
+        public string Type { get; set; }
 
         // sort key or range key
-        public object Response { get; set; }
+        public string Desc { get; set; }
+
+        // attributes
+        public bool Coffe { get; set; }
+        public bool Milk { get; set; }
+        public bool Water { get; set; }
+        public bool Chocolate { get; set; }
 
         public string ToString()
         {
-            return $"CoffeTypeResponse: {HttpStatusCode}, {Response}";
+            return $"CoffeTypeResponse: {Type}, {Desc}, {Coffe}, {Milk}, {Water}, {Chocolate}";
         }
     }
 }
