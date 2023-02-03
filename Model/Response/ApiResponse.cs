@@ -1,7 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using System;
-
-namespace CoffeMachine.Model.Response
+﻿namespace CoffeMachine.Model.Response
 {
     public class ApiResponse<TResult>
     {

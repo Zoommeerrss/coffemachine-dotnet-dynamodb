@@ -1,7 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using System;
-
-namespace CoffeMachine.Model.DTO
+﻿namespace CoffeMachine.Model.DTO
 {
     public class CoffeTypeDTO
     {

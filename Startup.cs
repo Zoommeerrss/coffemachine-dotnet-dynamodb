@@ -2,11 +2,15 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
+using CoffeMachine.Datastore.MySQL;
+using CoffeMachine.Datastore.MySQL.Repository;
+using CoffeMachine.Datastore.MySQL.Repository.port;
 using CoffeMachine.Service;
 using CoffeMachine.Service.port;
 using LocalStack.Client.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,10 +20,15 @@ namespace CoffeMachine
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public Startup(IConfiguration configuration, IHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
+
+        // Environment
+        public IHostEnvironment env { get; set; }
 
         public IConfiguration Configuration { get; }
 
@@ -27,6 +36,7 @@ namespace CoffeMachine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddHealthChecks();
 
             // Swagger
             services.AddSwaggerGen(c =>
@@ -50,8 +60,16 @@ namespace CoffeMachine
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAwsService<IAmazonDynamoDB>();
 
+            // MySQL
+            string mySqlConnectionStr = Configuration.GetConnectionString("MySQLConnection");
+            services.AddDbContextPool<IngredientContext>(options => options.UseMySQL(mySqlConnectionStr));
+
+            // Personalized Repository
+            services.AddScoped<IIngredientRepository, IngredientRepositoryImpl>();
+
             // Personalized Services
-            services.AddTransient<ICoffeService, CoffeServiceImpl>();
+            services.AddScoped<ICoffeService, CoffeServiceImpl>();
+            services.AddScoped<IIngredientService, IngredientServiceImpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +94,7 @@ namespace CoffeMachine
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

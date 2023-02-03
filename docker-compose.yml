@@ -53,8 +53,34 @@ services:
       timeout: 10s
     networks:
       - dev-net
+      
+  mysql-local:
+    container_name: mysql_local
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "System@20"
+      MYSQL_DATABASE: "coffemachine"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-local:/var/lib/mysql
+    networks:
+      - dev-net
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql_local
+    ports:
+      - "8080:8080"
+    networks:
+      - dev-net
 
 networks:
   dev-net:
     driver:
       bridge
+      
+volumes:
+  mysql-local:

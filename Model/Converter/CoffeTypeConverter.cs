@@ -2,14 +2,11 @@
 using CoffeMachine.Model.Entity;
 using CoffeMachine.Model.Request;
 using CoffeMachine.Model.Response;
-using System;
-using System.Collections.Generic;
 
 namespace CoffeMachine.Model.Converter
 {
     public class CoffeTypeConverter
     {
-
         public static CoffeType DTOtoEntity(CoffeTypeDTO dto)
         {
             CoffeType c = new CoffeType();

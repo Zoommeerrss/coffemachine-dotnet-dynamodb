@@ -1,16 +1,11 @@
 ﻿using CoffeMachine.Model.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2.DataModel;
 using CoffeMachine.Service.port;
-using CoffeMachine.Service;
 using CoffeMachine.Model.Converter;
 using CoffeMachine.Model.Response;
-using CoffeMachine.Model.Request;
 using System;
-using System.Linq;
 
 namespace CoffeMachine.Controllers
 {
@@ -31,18 +26,12 @@ namespace CoffeMachine.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult Welcome()
-        {
-            return new JsonResult("Welcome to the Coffe Machine!");
-        }
-
         [HttpGet("{type}/{desc}")]
-        public async Task<ApiResponse<CoffeTypeResponse>> GetCoffeType(string type, string desc)
+        public async Task<ApiResponse<CoffeTypeResponse>> GetByTypeAndDesc(string type, string desc)
         {
             try
             {
-                var result = await this._coffeService.GetCoffeType(type, desc);
+                var result = await this._coffeService.GetByTypeAndDesc(type, desc);
 
                 return new ApiResponse<CoffeTypeResponse>(200, new CoffeTypeResponse(
                     result.Type, result.Desc, result.Coffe, result.Milk, result.Water, result.Chocolate
@@ -59,12 +48,12 @@ namespace CoffeMachine.Controllers
         
         // PUT 
         [HttpPut("{type}/{desc}")]
-        public async Task<ApiResponse<CoffeTypeResponse>> PutCoffeTypeAsync(string type, string desc, [FromBody] CoffeTypeRequest coffe)
+        public async Task<ApiResponse<CoffeTypeResponse>> PutByTypeAndDesc(string type, string desc, [FromBody] CoffeTypeRequest coffe)
         {
             try
             {
 
-                await this._coffeService.PutCoffeType(type, desc, CoffeTypeConverter.RequesttoDTO(coffe));
+                await this._coffeService.PutByTypeAndDesc(type, desc, CoffeTypeConverter.RequesttoDTO(coffe));
                 return new ApiResponse<CoffeTypeResponse>(200);
             }
             catch (Exception e)
@@ -78,11 +67,11 @@ namespace CoffeMachine.Controllers
 
         // POST 
         [HttpPost]
-        public async Task<ApiResponse<CoffeTypeResponse>> AddCoffeType([FromBody] CoffeTypeRequest type) 
+        public async Task<ApiResponse<CoffeTypeResponse>> Add([FromBody] CoffeTypeRequest type) 
         {
             try
             {
-                await this._coffeService.AddCoffeType(CoffeTypeConverter.RequesttoDTO(type));
+                await this._coffeService.Add(CoffeTypeConverter.RequesttoDTO(type));
                 return new ApiResponse<CoffeTypeResponse>(200);
             }
             catch (Exception e)
@@ -99,7 +88,7 @@ namespace CoffeMachine.Controllers
         {            
             try
             {
-                await this._coffeService.DeleteCoffeType(type, desc);
+                await this._coffeService.DeleteByTypeAndDesc(type, desc);
                 return new ApiResponse<CoffeTypeResponse>(200);
             }
             catch (Exception e)

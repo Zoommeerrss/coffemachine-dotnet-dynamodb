@@ -1,7 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using System;
-
-namespace CoffeMachine.Model.Request
+﻿namespace CoffeMachine.Model.Request
 {
     public class CoffeTypeRequest
     {
